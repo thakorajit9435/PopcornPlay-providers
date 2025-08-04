@@ -43,7 +43,7 @@ async function main() {
     const batchName = args[1];
     if (!batchName || !testBatches[batchName]) {
       console.log("❌ Please specify a valid batch name.");
-      able batches:", Object.keys(testBatches).join(", "));
+      console.log("Available batches:", Object.keys(testBatches).join(", "));
       return;
     }
 
@@ -56,7 +56,7 @@ async function main() {
   const testName = command;
   if (!testConfigs[testName]) {
     console.log(`❌ Test '${testName}' not found.`);
-    able tests:", Object.keys(testConfigs).join(", "));
+    console.log("Available tests:", Object.keys(testConfigs).join(", "));
     console.log("Use 'node test-runner.js list' to see all available tests.");
     return;
   }

@@ -54,11 +54,20 @@ export const getStream = async function ({
     if (!ifameUrl.includes("multimovies")) {
       let playerBaseUrl = ifameUrl.split("/").slice(0, 3).join("/");
       const newPlayerBaseUrl = await axios.head(playerBaseUrl, { headers });
-      if (newPlayerBaseUrl) {
+      if (newPlayerBaseUrl?.request?.responseURL) {
         playerBaseUrl = newPlayerBaseUrl.request?.responseURL
           ?.split("/")
           .slice(0, 3)
           .join("/");
+      }
+      if (!newPlayerBaseUrl?.request?.responseURL) {
+        playerBaseUrl = (
+          await axios.head(playerBaseUrl, {
+            headers,
+            maxRedirects: 0, // Don't follow redirects
+            validateStatus: (status) => status >= 200 && status < 400,
+          })
+        ).headers?.location;
       }
       const playerId = ifameUrl.split("/").pop();
       const NewformData = new FormData();
@@ -145,7 +154,7 @@ export const getStream = async function ({
         server: "Multi",
         link: streamUrl.replace(/&i=\d+,'\.4&/, "&i=0.4&"),
         type: "m3u8",
-        subtitles: subtitles,
+        subtitles: [],
       });
     }
 
